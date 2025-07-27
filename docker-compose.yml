@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  claude-sandbox:
+    build: .
+    container_name: claude-sandbox
+    ports:
+      - "3000-3100:3000-3100"
+      - "8101-8200:8101-8200"
+    volumes:
+      - ./workspace:/workspace/shared
+      - claude-config:/workspace/.claude
+    environment:
+      - CLAUDE_CONFIG_PATH=/workspace/.claude
+      - TERM=xterm-256color
+    stdin_open: true
+    tty: true
+    working_dir: /workspace
+    networks:
+      - claude
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  claude-config:
+    driver: local
+
+networks:
+  claude:
+    driver: bridge
+    internal: false  # set to true to block internet access
